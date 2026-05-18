@@ -9,9 +9,8 @@ __pycache__/
 *.pyo
 
 # Temporary / data files
-temp/
-*.tif
-*.tiff
+temp/*
+!temp/test_00_run_0097.tif
 
 # OS
 .DS_Store
