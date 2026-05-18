@@ -11,6 +11,7 @@ __pycache__/
 # Temporary / data files
 temp/*
 !temp/test_00_run_0097.tif
+!temp/test_00_run_0202.tif
 
 # OS
 .DS_Store
