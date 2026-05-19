@@ -13,6 +13,12 @@ temp/*
 !temp/test_00_run_0097.tif
 !temp/test_00_run_0202.tif
 
+# Detector outputs
+out/
+
+# Test cache
+.pytest_cache/
+
 # OS
 .DS_Store
 Thumbs.db
