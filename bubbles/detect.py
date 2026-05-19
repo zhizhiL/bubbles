@@ -80,9 +80,18 @@ def _ring_stats(img: np.ndarray, cx: int, cy: int, r: int) -> tuple[float, float
     return inner_mean, ring_mean, uniformity
 
 
-def _hollowness(img: np.ndarray, cx: int, cy: int, r: int, thickness: int = 0) -> float:
-    inner_mean, ring_mean, _ = _ring_stats(img, cx, cy, r)
-    return inner_mean - ring_mean
+def _refine_radius(img: np.ndarray, cx: int, cy: int, r0: int, r_max: int) -> int:
+    """Hough sometimes locks onto the inner edge of a thick ring. Search outward
+    for the r* in [r0, min(r_max, 1.6*r0)] that maximizes hollowness (deep-interior
+    intensity minus the darkest annular band near that radius)."""
+    best_r, best_h = r0, -np.inf
+    upper = min(r_max, int(1.6 * r0)) + 1
+    for rr in range(r0, max(r0 + 1, upper)):
+        im_, rm_, _ = _ring_stats(img, cx, cy, rr)
+        h = im_ - rm_
+        if h > best_h:
+            best_h, best_r = h, rr
+    return best_r
 
 
 def _preprocess(img: np.ndarray, p: DetectionParams) -> np.ndarray:
@@ -115,6 +124,7 @@ def detect_bubbles(img: np.ndarray, params: DetectionParams | None = None) -> li
     out: list[Detection] = []
     for c in circles[0]:
         cx, cy, r = int(round(c[0])), int(round(c[1])), int(round(c[2]))
+        r = _refine_radius(raw_gray, cx, cy, r, p.max_radius)
         inner_mean, ring_mean, uniformity = _ring_stats(raw_gray, cx, cy, r)
         h = inner_mean - ring_mean
         if h < p.hollowness_min:
