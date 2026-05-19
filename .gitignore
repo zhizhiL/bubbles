@@ -13,6 +13,7 @@ temp/*
 !temp/test_00_run_0097.tif
 !temp/test_00_run_0202.tif
 !temp/test_01_run_0068.tif
+!temp/test_01_run_0074.tif
 
 # Detector outputs
 out/
