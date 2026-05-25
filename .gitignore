@@ -16,7 +16,8 @@ temp/*
 !temp/test_01_run_0074.tif
 
 # Detector outputs
-out/
+out/*
+!out/*.csv
 
 # Test cache
 .pytest_cache/

@@ -6,6 +6,8 @@ import csv
 import glob
 import os
 
+import warnings
+
 import cv2
 import tifffile
 
@@ -47,7 +49,9 @@ def main() -> None:
         w = csv.writer(f)
         w.writerow(["frame", "cx", "cy", "r", "hollowness", "uniformity"])
         for p in paths:
-            img = tifffile.imread(p)
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                img = tifffile.imread(p)
             dets = detect_bubbles(img, params)
             name = os.path.splitext(os.path.basename(p))[0]
             for d in dets:
